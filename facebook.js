@@ -4,13 +4,14 @@
 // https://developers.facebook.com/docs/messenger-platform/send-api-reference
 const request = require('request');
 const Config = require('./const.js');
+const token = process.env.FB_PAGE_ACCESS_TOKEN;
 
 const fbReq = request.defaults({
   uri: 'https://graph.facebook.com/me/messages',
   method: 'POST',
   json: true,
   qs: {
-    access_token: process.env.FB_PAGE_ACCESS_TOKEN
+    access_token: token
   },
   headers: {
     'Content-Type': 'application/json'
