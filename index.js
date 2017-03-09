@@ -193,6 +193,8 @@ app.post('/webhook/', function (req, res) {
     // res.sendStatus(200)
 
     const data = req.body;
+    console.log('webhook data');
+    console.log(data);
 
   if (data.object === 'page') {
     data.entry.forEach(entry => {
