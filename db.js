@@ -22,24 +22,36 @@ function authorize(credentials, callback) {
   var auth = new googleAuth();
   var oauth2Client = new auth.OAuth2(clientId, clientSecret, redirectUrl);
 
-  // Check if we have previously stored a token.
-  fs.readFile(TOKEN_PATH, function(err, token) {
-    if (err) {
-      console.log('setting google access token');
-      oauth2Client.getToken('4/s68BY2c5TVwiTXgA6Y76mb0X1UMWlGFIfqD4ah8xyxw', function(err, token) {
-        if (err) {
-          console.log('Error while trying to retrieve access token', err);
-          return;
-        }
-        oauth2Client.credentials = token;
-        storeToken(token);
-        callback(oauth2Client);
-      });
-    } else {
-      oauth2Client.credentials = JSON.parse(token);
-      callback(oauth2Client);
-    }
-  });
+  // // Check if we have previously stored a token.
+  // fs.readFile(TOKEN_PATH, function(err, token) {
+  //   if (err) {
+  //     console.log('setting google access token');
+  //     oauth2Client.getToken('4/s68BY2c5TVwiTXgA6Y76mb0X1UMWlGFIfqD4ah8xyxw', function(err, token) {
+  //       if (err) {
+  //         console.log('Error while trying to retrieve access token', err);
+  //         return;
+  //       }
+  //
+  //       console.log('TOKEN', token);
+  //       oauth2Client.credentials = token;
+  //       storeToken(token);
+  //       callback(oauth2Client);
+  //     });
+  //   } else {
+  //     console.log('TOKEN', JSON.parse(token));
+  //     oauth2Client.credentials = JSON.parse(token);
+  //     callback(oauth2Client);
+  //   }
+  // });
+
+  secret_token = {
+    access_token: 'ya29.GlsIBGaY-jyxEAfv7BzLp0eOmrXQGB3bi-iHAJgeEy5qg8W1OGjFz1TQUuYXnxlirkmQXKfR0lHFbRF5dfAPlQbEsMbRb0rTAURAR2CYDhWv5eBBDQIo9NuHaoIH',
+    refresh_token: '1/2VGGBPeqAp3W6_vNXGJ67HXFstZAL6Qx51OHtsh8oxo',
+    token_type: 'Bearer',
+    expiry_date: 1489012353758
+  }
+  oauth2Client.credentials = secret_token;
+  callback(oauth2Client);
 
 }
 
