@@ -7,6 +7,9 @@ const FB = require('./facebook.js');
 const Config = require('./const.js');
 const db = require('./db.js');
 
+const token = process.env.FB_PAGE_ACCESS_TOKEN;
+const WIT_TOKEN = process.env.WIT_TOKEN;
+
 const firstEntityValue = (entities, entity) => {
   const val = entities && entities[entity] &&
     Array.isArray(entities[entity]) &&
@@ -57,8 +60,15 @@ const actions = {
   },
   merge(sessionId, context, entities, message, cb) {
     // Retrieve the location entity and store it into a context field
-    const loc = firstEntityValue(entities, 'location');
+    console.log(entities);
+    let loc = '';
+    if('contact' in entities) {
+      loc = firstEntityValue(entities, 'contact');
+    } else if('feeling_intent' in entities) {
+      loc = entities.feeling_intent;
+    }
     if (loc) {
+      console.log('setting loc to ', loc);
       context.loc = loc; // store it in context
     }
 
@@ -67,59 +77,35 @@ const actions = {
   error(sessionId, context, error) {
     console.log(error.message);
   },
-  // send(request, response) {
-  //   const {sessionId, context, entities} = request;
-  //   const {text, quickreplies} = response;
-  //   console.log('sending...', JSON.stringify(response));
-  // },
-  // getForecast({context, entities}) {
-  //   var location = firstEntityValue(entities, 'location');
-  //   if (location) {
-  //     context.forecast = 'sunny in ' + location; // we should call a weather API here
-  //     delete context.missingLocation;
-  //   } else {
-  //     context.missingLocation = true;
-  //     delete context.forecast;
-  //   }
-  //   return context;
-  // },
-  // saveName({context, entities}) {
-  //   var name = firstEntityValue(entities, 'contact');
-  //   console.log(context);
-  //   console.log(entities);
-  //   if (name) {
-  //     context.name = name;
-  //     console.log('Name: ' + name);
-  //   } else {
-  //     console.error('No name');
-  //   }
-  //   return context;
-  // },
-  // saveData({context, entities}) {
-  //   var feelings = [];
-  //   entities.feeling_intent.forEach(feeling => {
-  //     feelings.push(feeling.value);
-  //   });
-  //   context.feelings = feelings;
-  //   // console.log(context);
-  //   // console.log(entities);
-  //   db.getAuth(auth => {
-  //     console.log("Write Data: ", [[context.name, context.feelings.join(',')]]);
-  //     db.addRow(auth, [[context.name, context.feelings.join(',')]], result => {
-  //       console.log('data written!');
-  //     })
-  //   });
-  //   return context;
-  // }
+  saveName(sessionId, context, cb) {
+    let name = context.loc;
+    if (name) {
+      context.name = name;
+      console.log('Name: ' + name);
+    } else {
+      console.error('No name');
+    }
+    cb(context);
+  },
+  saveData(sessionId, context, cb) {
+    let feelingIntent = context.loc;
+    var feelings = [];
+    feelingIntent.forEach(feeling => {
+      feelings.push(feeling.value);
+    });
+    context.feelings = feelings;
+    db.getAuth(auth => {
+      console.log("Write Data: ", [[context.name, context.feelings.join(',')]]);
+      db.addRow(auth, [[context.name, context.feelings.join(',')]], result => {
+        console.log('data written!');
+        cb(context);
+      })
+    });
+  }
 };
 
-
 const getWit = () => {
-  return new Wit({
-    accessToken: Config.WIT_TOKEN,
-    actions: actions,
-    apiVersion: '20160516'
-  });
+  return new Wit(Config.WIT_TOKEN, actions);
 };
 
 exports.getWit = getWit;
