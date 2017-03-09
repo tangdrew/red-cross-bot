@@ -85,9 +85,15 @@ const actions = {
   },
   saveData(sessionId, context, cb) {
     console.log('Final context: ', context);
+    let feels = '';
+    if(context.feelings) {
+      feels = context.feelings.join(',');
+    } else {
+      feels = 'NA';
+    }
     db.getAuth(auth => {
-      console.log("Write Data: ", [[context.contact, context.feelings.join(','), context.rating, context.bool]]);
-      db.addRow(auth, [[context.contact, context.feelings.join(','), context.rating, context.bool]], result => {
+      console.log("Write Data: ", [[context.contact, feels, context.rating, context.bool]]);
+      db.addRow(auth, [[context.contact, feels, context.rating, context.bool]], result => {
         console.log('data written!');
         context.done = true;
         cb(context);
