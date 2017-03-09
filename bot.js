@@ -83,16 +83,6 @@ const actions = {
   error(sessionId, context, error) {
     console.log(error.message);
   },
-  saveName(sessionId, context, cb) {
-    let name = context.loc;
-    if (name) {
-      context.name = name;
-      console.log('Name: ' + name);
-    } else {
-      console.error('No name');
-    }
-    cb(context);
-  },
   saveData(sessionId, context, cb) {
     console.log('Final context: ', context);
     db.getAuth(auth => {
