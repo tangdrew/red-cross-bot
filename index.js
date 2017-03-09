@@ -142,6 +142,7 @@ const bodyParser = require('body-parser')
 const request = require('request')
 const app = express()
 const Config = require('./const.js');
+const token = process.env.FB_PAGE_ACCESS_TOKEN;
 
 app.set('port', (process.env.PORT || 5000))
 
@@ -182,7 +183,7 @@ function sendTextMessage(sender, text) {
     let messageData = { text:text }
     request({
         url: 'https://graph.facebook.com/v2.6/me/messages',
-        qs: {access_token:Config.FB_PAGE_TOKEN},
+        qs: {access_token:token},
         method: 'POST',
         json: {
             recipient: {id:sender},
