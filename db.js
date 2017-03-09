@@ -54,24 +54,6 @@ exports.getAuth = function(callback) {
     });
   });
 }
-// fs.readFile('client_secret.json', function processClientSecrets(err, content) {
-//   if (err) {
-//     console.log('Error loading client secret file: ' + err);
-//     return;
-//   }
-//   // Authorize a client with the loaded credentials, then call the
-//   // Google Sheets API.
-//   // authorize(JSON.parse(content), listMajors);
-//
-//
-//   authorize(JSON.parse(content), auth => {
-//     addRow(auth, [['Morton Shapiro', 'purple sweater']], res => {
-//       readData(auth, res => {
-//         console.log(res);
-//       });
-//     });
-//   });
-// });
 
 /**
  * Get and store new token after prompting for user authorization, and then
@@ -127,7 +109,7 @@ exports.readData = function(auth, callback) {
   sheets.spreadsheets.values.get({
     auth: auth,
     spreadsheetId: '1M4yBOZsr5dxVu1nCZDAdveVbdbC9U6jpCgNTPZY-Zq4',
-    range: 'Database!A2:B',
+    range: 'Database!A2:D',
   }, function(err, response) {
     if (err) {
       console.log('The API returned an error: ' + err);

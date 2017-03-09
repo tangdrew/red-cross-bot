@@ -63,14 +63,20 @@ const actions = {
     console.log(entities);
     let loc = '';
     if('contact' in entities) {
-      loc = firstEntityValue(entities, 'contact');
+      context.contact = firstEntityValue(entities, 'contact');
     } else if('feeling_intent' in entities) {
-      loc = entities.feeling_intent;
+      let feelingIntent = entities.feeling_intent;
+      var feelings = [];
+      feelingIntent.forEach(feeling => {
+        feelings.push(feeling.value);
+      });
+      context.feelings = feelings;
+    } else if('number' in entities) {
+      context.rating = firstEntityValue(entities, 'number');
+    } else if('yes_no' in entities) {
+      context.bool = firstEntityValue(entities, 'yes_no');
     }
-    if (loc) {
-      console.log('setting loc to ', loc);
-      context.loc = loc; // store it in context
-    }
+    console.log('setting to ', context);
 
     cb(context);
   },
@@ -88,15 +94,10 @@ const actions = {
     cb(context);
   },
   saveData(sessionId, context, cb) {
-    let feelingIntent = context.loc;
-    var feelings = [];
-    feelingIntent.forEach(feeling => {
-      feelings.push(feeling.value);
-    });
-    context.feelings = feelings;
+    console.log('Final context: ', context);
     db.getAuth(auth => {
-      console.log("Write Data: ", [[context.name, context.feelings.join(',')]]);
-      db.addRow(auth, [[context.name, context.feelings.join(',')]], result => {
+      console.log("Write Data: ", [[context.contact, context.feelings.join(','), context.rating, context.bool]]);
+      db.addRow(auth, [[context.contact, context.feelings.join(','), context.rating, context.bool]], result => {
         console.log('data written!');
         cb(context);
       })
