@@ -356,7 +356,8 @@ const actions = {
 // Setting up our bot
 const wit = new Wit({
   accessToken: WIT_TOKEN,
-  actions: actions
+  actions: actions,
+  apiVersion: '20160516'
 });
 
 // Spin up the server
