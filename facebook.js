@@ -10,7 +10,7 @@ const fbReq = request.defaults({
   method: 'POST',
   json: true,
   qs: {
-    access_token: Config.FB_PAGE_TOKEN
+    access_token: process.env.FB_PAGE_TOKEN
   },
   headers: {
     'Content-Type': 'application/json'
