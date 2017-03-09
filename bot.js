@@ -89,6 +89,7 @@ const actions = {
       console.log("Write Data: ", [[context.contact, context.feelings.join(','), context.rating, context.bool]]);
       db.addRow(auth, [[context.contact, context.feelings.join(','), context.rating, context.bool]], result => {
         console.log('data written!');
+        context.done = true;
         cb(context);
       })
     });
