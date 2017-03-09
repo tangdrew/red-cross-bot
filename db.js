@@ -25,12 +25,22 @@ function authorize(credentials, callback) {
   // Check if we have previously stored a token.
   fs.readFile(TOKEN_PATH, function(err, token) {
     if (err) {
-      getNewToken(oauth2Client, callback);
+      console.log('setting google access token');
+      oauth2Client.getToken('4/s68BY2c5TVwiTXgA6Y76mb0X1UMWlGFIfqD4ah8xyxw', function(err, token) {
+        if (err) {
+          console.log('Error while trying to retrieve access token', err);
+          return;
+        }
+        oauth2Client.credentials = token;
+        storeToken(token);
+        callback(oauth2Client);
+      });
     } else {
       oauth2Client.credentials = JSON.parse(token);
       callback(oauth2Client);
     }
   });
+
 }
 
 exports.getAuth = function(callback) {
